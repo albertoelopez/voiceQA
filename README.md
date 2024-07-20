@@ -7,7 +7,7 @@ By [@joaomdmoura](https://x.com/joaomdmoura)
 - [CrewAI Framework](#crewai-framework)
 - [Running the script](#running-the-script)
 - [Details & Explanation](#details--explanation)
-- [Using GPT 3.5](#using-gpt-35)
+- [Using Groq](#using-groq)
 - [Using Local Models with Ollama](#using-local-models-with-ollama)
 - [Contributing](#contributing)
 - [Support and Contact](#support-and-contact)
@@ -17,10 +17,7 @@ By [@joaomdmoura](https://x.com/joaomdmoura)
 CrewAI is designed to facilitate the collaboration of role-playing AI agents. In this example, these agents work together to give a complete stock analysis and investment recommendation
 
 ## Running the Script
-It uses GPT-4 by default so you should have access to that to run it.
-
-***Disclaimer:** This will use gpt-4 unless you changed it 
-not to, and by doing so it will cost you money.*
+It uses Llama-70B by default so you should have access to that to run it.
 
 - **Configure Environment**: Copy ``.env.example` and set up the environment variables for [Browseless](https://www.browserless.io/), [Serper](https://serper.dev/), [SEC-API](https://sec-api.io) and [OpenAI](https://platform.openai.com/api-keys)
 - **Install Dependencies**: Run `poetry install --no-root`.
@@ -34,12 +31,16 @@ not to, and by doing so it will cost you money.*
   - `./stock_analysis_agents.py`: Main file with the agents creation.
   - `./tools`: Contains tool classes used by the agents.
 
-## Using GPT 3.5
-CrewAI allow you to pass an llm argument to the agent construtor, that will be it's brain, so changing the agent to use GPT-3.5 instead of GPT-4 is as simple as passing that argument on the agent you want to use that LLM (in `main.py`).
+## Using Groq
+CrewAI allow you to pass an llm argument to the agent construtor, that will be it's brain, so changing the agent to use different models is as simple as passing that argument on the agent you want to use that LLM (in `main.py`).
 ```python
-from langchain.chat_models import ChatOpenAI
+from langchain_groq import ChatGroq
 
-llm = ChatOpenAI(model='gpt-3.5') # Loading GPT-3.5
+llm = ChatGroq(
+    temperature=0,
+    model="llama3-70b-8192",
+    # api_key="" # Optional if not set as an environment variable
+)
 
 def local_expert(self):
 	return Agent(
