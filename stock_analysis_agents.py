@@ -7,7 +7,7 @@ from tools.search_tools import SearchTools
 from tools.sec_tools import SECTools
 
 
-class StockAnalysisAgents():
+class VoiceAnalysisAgents():
   def financial_analyst(self):
     return Agent(
       role='The Best Financial Analyst',
