@@ -1,40 +1,39 @@
-from crewai import Crew
 from textwrap import dedent
 
-from stock_analysis_agents import StockAnalysisAgents
-from stock_analysis_tasks import StockAnalysisTasks
-
+from crewai import Crew
 from dotenv import load_dotenv
+
+from voice_analysis_agents import VoiceAnalysisAgents
+from voice_analysis_tasks import VoiceAnalysisTasks
+
 load_dotenv()
 
-class FinancialCrew:
+class VoiceAnalysisCrew:
   def __init__(self, company):
     self.company = company
 
   def run(self):
-    agents = StockAnalysisAgents()
-    tasks = StockAnalysisTasks()
+    agents = VoiceAnalysisAgents()
+    tasks = VoiceAnalysisTasks()
 
-    research_analyst_agent = agents.research_analyst()
-    financial_analyst_agent = agents.financial_analyst()
-    investment_advisor_agent = agents.investment_advisor()
-
-    research_task = tasks.research(research_analyst_agent, self.company)
-    financial_task = tasks.financial_analysis(financial_analyst_agent)
-    filings_task = tasks.filings_analysis(financial_analyst_agent)
-    recommend_task = tasks.recommend(investment_advisor_agent)
+    conversation_analyst_agent = agents.conversation_evaluator()
+    human_agent = agents.human_agent()
+    chatbot_agent = agents.chatbot_agent()
+    
+    chatbot_task = tasks.chatbot_analysis_task(conversation_analyst_agent, self.company, "")
+    human_task = tasks.human_analysis_task(human_agent)
+    conversation_task = tasks.conversation_context_task(chatbot_agent)
 
     crew = Crew(
       agents=[
-        research_analyst_agent,
-        financial_analyst_agent,
-        investment_advisor_agent
+        conversation_analyst_agent,
+        human_agent,
+        chatbot_agent
       ],
       tasks=[
-        research_task,
-        financial_task,
-        filings_task,
-        recommend_task
+        chatbot_task,
+        human_task,
+        conversation_task
       ],
       verbose=True
     )
@@ -45,12 +44,13 @@ class FinancialCrew:
 if __name__ == "__main__":
   print("## Welcome to Financial Analysis Crew")
   print('-------------------------------')
+  # we need to define the inputs here
   company = input(
     dedent("""
       What is the company you want to analyze?
     """))
   
-  financial_crew = FinancialCrew(company)
+  financial_crew = VoiceAnalysisCrew(company)
   result = financial_crew.run()
   print("\n\n########################")
   print("## Here is the Report")
