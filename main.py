@@ -1,10 +1,12 @@
 from textwrap import dedent
+import os
 
 from crewai import Crew
 from dotenv import load_dotenv
 
 from voice_analysis_agents import ConversationAnalysisAgents
 from voice_analysis_tasks import VoiceAnalysisTasks
+from tools.readCSV import read_and_display_csv
 
 load_dotenv()
 
@@ -12,7 +14,7 @@ class VoiceAnalysisCrew:
   # def __init__(self, company):
   #   self.company = company
 
-  def run(self):
+  def run(self, transcriptions):
     agents = ConversationAnalysisAgents()
     tasks = VoiceAnalysisTasks()
 
@@ -44,15 +46,20 @@ class VoiceAnalysisCrew:
 if __name__ == "__main__":
   print("## Welcome to Financial Analysis Crew")
   print('-------------------------------')
+  file_path = 'example_files/interesse_information_rows.csv'
+  transcriptions = read_and_display_csv(file_path)
+  qa_results = []
+  for trans in transcriptions:
+    voice_qa_crew = VoiceAnalysisCrew()
+    result = voice_qa_crew.run(trans)
+    qa_results.append(result)
   # we need to define the inputs here
   # company = input(
   #   dedent("""
   #     What is the company you want to analyze?
   #   """))
   
-  voice_qa_crew = VoiceAnalysisCrew()
-  result = voice_qa_crew.run()
   print("\n\n########################")
   print("## Here is the Report")
   print("########################\n")
-  print(result)
+  print(qa_results)
