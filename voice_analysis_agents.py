@@ -48,7 +48,18 @@ class ConversationAnalysisAgents():
             verbose=False,
             llm=default_llm, 
         )
-
+    # WE NEED CONTEXT OF BOTH due to the row data not separated
+    def chatbot_human_agent(self):
+        return Agent(
+            role='Chatbot human conversation',
+            goal='Find and summarize the latest AI news',
+            backstory="""You're a researcher at a large company.
+            You're responsible for analyzing data and providing insights
+            to the business.""",
+            verbose=False,
+            llm=default_llm, 
+        )
+        
 
 
 
