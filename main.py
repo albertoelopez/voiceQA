@@ -1,49 +1,37 @@
+import random
 from textwrap import dedent
-import os
 
 from crewai import Crew
 from dotenv import load_dotenv
 
+from tools.readCSV import read_and_display_csv
 from voice_analysis_agents import ConversationAnalysisAgents
 from voice_analysis_tasks import VoiceAnalysisTasks
-from tools.readCSV import read_and_display_csv
 
 load_dotenv()
 
 class VoiceAnalysisCrew:
-  # def __init__(self, company):
-  #   self.company = company
 
-  def run(self, transcriptions):
+  def run(self, transcription):
     agents = ConversationAnalysisAgents()
     tasks = VoiceAnalysisTasks()
 
-    conversation_analyst_agent = agents.conversation_evaluator()
-    human_agent = agents.human_agent()
-    chatbot_agent = agents.chatbot_agent()
-    # Need this agent because we don't want to have two separate data
-    # chatbot_human_agent = agents.chatbot_human_agent()
-   
-    # Need this agent because we don't want to have two separate data
-    # chatbot_human_task = tasks.chatbot_human_analysis_task(chatbot_human_agent, "transcription here") 
-    chatbot_task = tasks.chatbot_analysis_task(chatbot_agent)
-    human_task = tasks.human_analysis_task(human_agent)
-    conversation_task = tasks.conversation_context_task(conversation_analyst_agent, human_task, chatbot_task)
-    # WE NEED THIS CASE, we don't want to separate conversation between chatbot and human
-    # conversation_task = tasks.conversation_context_task(conversation_analyst_agent, chatbot_human_task)
+    process_evaluator_agent = agents.process_evaluator()
+    voice_call_evaluator_agent = agents.voice_call_evaluator()
+
+    conversation_analysis = tasks.conversation_analysis_task(process_evaluator_agent,
+                                                             transcription)
+    conversation_results_evaluation = tasks.results_evaluation(voice_call_evaluator_agent, 
+                                                        conversation_analysis)
 
     crew = Crew(
       agents=[
-        conversation_analyst_agent,
-        human_agent,
-        chatbot_agent,
-        #chatbot_human_agent
+        voice_call_evaluator_agent,
+        process_evaluator_agent,
       ],
       tasks=[
-        chatbot_task,
-        human_task,
-        #chatbot_human_task,
-        conversation_task
+        conversation_analysis,
+        conversation_results_evaluation,
       ],
       verbose=True
     )
@@ -57,15 +45,11 @@ if __name__ == "__main__":
   file_path = 'example_files/interesse_information_rows.csv'
   transcriptions = read_and_display_csv(file_path)
   qa_results = []
-  for trans in transcriptions:
+  random_transcriptions = random.sample(transcriptions, 5)
+  for transcription in random_transcriptions:
     voice_qa_crew = VoiceAnalysisCrew()
-    result = voice_qa_crew.run(trans)
+    result = voice_qa_crew.run(transcription)
     qa_results.append(result)
-  # we need to define the inputs here
-  # company = input(
-  #   dedent("""
-  #     What is the company you want to analyze?
-  #   """))
   
   print("\n\n########################")
   print("## Here is the Report")
