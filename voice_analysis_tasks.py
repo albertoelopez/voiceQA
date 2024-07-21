@@ -22,3 +22,10 @@ class VoiceAnalysisTasks():
       """),
       agent=agent
     )
+  def conversation_context_task(self, agent, human_conversation, chatbot_conversation):
+    return Task(
+    description='Provide sample conversation between chatbot and human for evaluation.',
+    expected_output='A sample conversation for analysis',
+    agent=agent,
+    context=[human_conversation, chatbot_conversation]
+)

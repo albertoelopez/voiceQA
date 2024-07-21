@@ -3,6 +3,8 @@ from textwrap import dedent
 
 from stock_analysis_agents import StockAnalysisAgents
 from stock_analysis_tasks import StockAnalysisTasks
+from voice_analysis_agents import ConversationAnalysisAgents
+from voice_analysis_tasks import  VoiceAnalysisTasks
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -12,29 +14,28 @@ class FinancialCrew:
     self.company = company
 
   def run(self):
-    agents = StockAnalysisAgents()
-    tasks = StockAnalysisTasks()
+    agents = ConversationAnalysisAgents()
+    tasks = VoiceAnalysisTasks() 
 
-    research_analyst_agent = agents.research_analyst()
-    financial_analyst_agent = agents.financial_analyst()
-    investment_advisor_agent = agents.investment_advisor()
+    conversation_eval_agent = agents.conversation_evaluator()
+    human_agent = agents.human_agent()
+    chatbot_agent = agents.chatbot_agent()
 
-    research_task = tasks.research(research_analyst_agent, self.company)
-    financial_task = tasks.financial_analysis(financial_analyst_agent)
-    filings_task = tasks.filings_analysis(financial_analyst_agent)
-    recommend_task = tasks.recommend(investment_advisor_agent)
+    chatbot_task = tasks.chatbot_analysis_task(conversation_eval_agent, self.company)
+    human_task = tasks.human_analysis_task(human_agent)
+    conversation_task = tasks.conversation_context_task(chatbot_agent)
 
     crew = Crew(
       agents=[
-        research_analyst_agent,
-        financial_analyst_agent,
-        investment_advisor_agent
+        research
+        conversation_eval_agent,
+        human_agent,
+        chatbot_agent
       ],
       tasks=[
-        research_task,
-        financial_task,
-        filings_task,
-        recommend_task
+        chatbot_task,
+        human_task,
+        conversation_task
       ],
       verbose=True
     )
