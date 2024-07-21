@@ -28,7 +28,26 @@ class ConversationAnalysisAgents():
             verbose=False,
             llm=default_llm, # <----- passing our llm reference here
         )
-
+    def human_agent(self):
+        return Agent(
+            role='Human speaking on phone',
+            goal='Find and summarize the latest AI news',
+            backstory="""You're a researcher at a large company.
+            You're responsible for analyzing data and providing insights
+            to the business.""",
+            verbose=False,
+            llm=default_llm, 
+        )
+    def chatbot_agent(self):
+        return Agent(
+            role='Phone chatbot',
+            goal='Find and summarize the latest AI news',
+            backstory="""You're a researcher at a large company.
+            You're responsible for analyzing data and providing insights
+            to the business.""",
+            verbose=False,
+            llm=default_llm, 
+        )
 
 
 
