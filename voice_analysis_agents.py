@@ -28,6 +28,7 @@ class ConversationAnalysisAgents():
             verbose=False,
             llm=default_llm, # <----- passing our llm reference here
         )
+    # TODO: Could be deleted as well
     def human_agent(self):
         return Agent(
             role='Human speaking on phone',
@@ -38,6 +39,7 @@ class ConversationAnalysisAgents():
             verbose=False,
             llm=default_llm, 
         )
+    # TODO: could be deleted
     def chatbot_agent(self):
         return Agent(
             role='Phone chatbot',
@@ -51,11 +53,11 @@ class ConversationAnalysisAgents():
     # WE NEED CONTEXT OF BOTH due to the row data not separated
     def chatbot_human_agent(self):
         return Agent(
-            role='Chatbot human conversation',
-            goal='Find and summarize the latest AI news',
-            backstory="""You're a researcher at a large company.
-            You're responsible for analyzing data and providing insights
-            to the business.""",
+            role='Facilitate a phone conversation between a chatbot and a person',
+            goal='Determine the effectiveness of the conversation and provide insights for improving chatbot interactions at an insurance company',
+            backstory="""You're a researcher at a large insurance company. "
+            "You're responsible for analyzing data and providing insights "
+            "to the business.""",
             verbose=False,
             llm=default_llm, 
         )
