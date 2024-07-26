@@ -15,37 +15,27 @@ evaluation_criteria = """
 """
 
 class VoiceAnalysisTasks():
-  # Need both human and chatbot conversation since on same row
-  def chatbot_human_analysis_task(self, agent, chatbot_human_conversation):
+  def results_evaluation(self, agent, results): 
     return Task(description=dedent(f"""
-        Evaluate the quality of the conversation between a chatbot and a human based on the following criteria:\n{evaluation_criteria}
+        Evaluate the quality of the results based on the following criteria:
+        {evaluation_criteria}
+        
+        Results:
+        {results}
       """),
       agent=agent,
-      async_execution=True,
-      expected_output= "A detailed evaluation report based on the criteria",
-      context=[chatbot_human_conversation]
+      expected_output= "a boolean that represents if the evaluation is correct or not",
+      context=[results]
     )
-  # TODO: could be deleted if we use above
-  def chatbot_analysis_task(self, agent):
-    return Task(description=dedent(f"""
-        'Evaluate the quality of the chatbot conversation based on the following 
-        criteria:
-      """),
-      agent=agent,
-      expected_output= "A bullet list summary of the top 5 most important analytics",
-    )
-   # TODO: Could be deleted if we use above
-  def human_analysis_task(self, agent): 
-    return Task(description=dedent(f"""
-        Evaluate the quality of the human conversation based on the following criteria:
-      """),
-      agent=agent,
-      expected_output= "A bullet list summary of the top 5 most important analytics",
-    )
-  def conversation_context_task(self, agent, human_conversation, chatbot_conversation):
+  def conversation_analysis_task(self, agent, transcript):
     return Task(
-    description=f'Evaluate the quality of the conversation between a chatbot and a human based on the following criteria:\n{evaluation_criteria}',
-    expected_output='A detailed evaluation report based on the criteria',
+    description=f"""Evaluate the quality of the conversation between a chatbot and a 
+    human based on the following criteria:
+    {evaluation_criteria}
+    
+    conversation transcription:
+    {transcript}
+    """,
+    expected_output='a bullet point of the concise details of the evaluation',
     agent=agent,
-    context=[human_conversation, chatbot_conversation]
 )
